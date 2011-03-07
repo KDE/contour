@@ -45,8 +45,19 @@ include_directories(
   ${KDE4_INCLUDES}
   ${NEPOMUK_INCLUDE_DIR}
   ${SOPRANO_INCLUDE_DIR}
+#hack to find qt-mobility includes. TODO: get cmake macro
+  ${INCLUDE_INSTALL_DIR}/QtMobility
 )
 
-add_subdirectory(recommendation)
+set(recommendationmanager_SRC
+  recommendation/recommendationaction.cpp
+  recommendation/recommendation.cpp
+  recommendation/recommendationmanager.cpp
+  location/locationmanager.cpp
+)
+
+kde4_add_library(contourrecommendation
+  ${recommendationmanager_SRC}
+)
 
 macro_display_feature_log()
