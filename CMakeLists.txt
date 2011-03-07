@@ -42,6 +42,8 @@ install(FILES
 # ===============================================================================================
 include_directories(
   ${contour_SOURCE_DIR}/location
+  ${contour_SOURCE_DIR}/recommendation
+  ${contour_BINARY_DIR}
   ${QT_INCLUDES}
   ${KDE4_INCLUDES}
   ${NEPOMUK_INCLUDE_DIR}
@@ -54,9 +56,17 @@ set(recommendationmanager_SRC
   recommendation/recommendationaction.cpp
   recommendation/recommendation.cpp
   recommendation/recommendationmanager.cpp
+  recommendation/dbusoperators.cpp
   location/locationmanager.cpp
   main.cpp
 )
+
+qt4_add_dbus_adaptor(
+  recommendationmanager_SRC
+  "recommendation/org.kde.contour.RecommendationManager.xml"
+  "recommendationmanager.h"
+  "Contour::RecommendationManager"
+  "recommendationmanageradaptor")
 
 kde4_add_executable(contour
   ${recommendationmanager_SRC}
