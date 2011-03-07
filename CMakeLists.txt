@@ -54,10 +54,21 @@ set(recommendationmanager_SRC
   recommendation/recommendation.cpp
   recommendation/recommendationmanager.cpp
   location/locationmanager.cpp
+  main.cpp
 )
 
-kde4_add_library(contourrecommendation
+kde4_add_executable(contour
   ${recommendationmanager_SRC}
+)
+
+target_link_libraries(
+  contour
+  ${QT_QTCORE_LIBRARY}
+  ${KDE4_KDECORE_LIBS}
+  ${SOPRANO_LIBRARIES}
+  ${NEPOMUK_LIBRARIES}
+  ${NEPOMUK_QUERY_LIBRARIES}
+  QtLocation
 )
 
 macro_display_feature_log()
