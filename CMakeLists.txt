@@ -41,6 +41,7 @@ install(FILES
 # build stuff
 # ===============================================================================================
 include_directories(
+  ${contour_SOURCE_DIR}/location
   ${QT_INCLUDES}
   ${KDE4_INCLUDES}
   ${NEPOMUK_INCLUDE_DIR}
@@ -68,6 +69,7 @@ target_link_libraries(
   ${SOPRANO_LIBRARIES}
   ${NEPOMUK_LIBRARIES}
   ${NEPOMUK_QUERY_LIBRARIES}
+  kworkspace
   QtLocation
 )
 
