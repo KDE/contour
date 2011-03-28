@@ -68,6 +68,9 @@ qt4_add_dbus_adaptor(
   "Contour::RecommendationManager"
   "recommendationmanageradaptor")
 
+find_file(kext_onto_src kext.trig PATH_SUFFIXES "ontology/kde" PATHS ${CMAKE_INSTALL_PREFIX}/share ENV XDG_DATA_DIRS)
+soprano_add_ontology(recommendationmanager_SRC ${kext_onto_src} "KExt" "Nepomuk::Vocabulary" "trig")
+
 kde4_add_executable(contour
   ${recommendationmanager_SRC}
 )
