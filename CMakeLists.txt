@@ -50,6 +50,7 @@ include_directories(
   ${SOPRANO_INCLUDE_DIR}
 #hack to find qt-mobility includes. TODO: get cmake macro
   ${INCLUDE_INSTALL_DIR}/QtMobility
+  ${INCLUDE_INSTALL_DIR}/QtMobility/QtMobility
 )
 
 set(recommendationmanager_SRC
