@@ -86,4 +86,6 @@ target_link_libraries(
   QtLocation
 )
 
+add_subdirectory(plasma)
+
 macro_display_feature_log()
