@@ -62,6 +62,8 @@ set(recommendationmanager_SRC
   main.cpp
 )
 
+set(recommendationmanager_xml recommendation/org.kde.contour.RecommendationManager.xml)
+
 qt4_add_dbus_adaptor(
   recommendationmanager_SRC
   "recommendation/org.kde.contour.RecommendationManager.xml"
@@ -86,6 +88,46 @@ target_link_libraries(
   kworkspace
   QtLocation
 )
+
+set(recommendationsclient_SRC
+  recommendation/recommendationaction.cpp
+  recommendation/recommendation.cpp
+  recommendation/dbusoperators.cpp
+  recommendation/recommendationsclient.cpp
+)
+
+set_source_files_properties(${recommendationmanager_xml} PROPERTIES
+   NO_NAMESPACE false
+   INCLUDE "dbusoperators.h"
+   CLASSNAME OrgKdeContourRecommendationManagerInterface
+)
+
+QT4_ADD_DBUS_INTERFACE(recommendationsclient_SRC ${recommendationmanager_xml} contour_interface)
+
+kde4_add_library(recommendationsclient
+  ${recommendationsclient_SRC}
+)
+
+target_link_libraries(
+  recommendationsclient
+  ${QT_QTCORE_LIBRARY}
+  ${KDE4_KDECORE_LIBS}
+  ${SOPRANO_LIBRARIES}
+  ${NEPOMUK_LIBRARIES}
+  ${NEPOMUK_QUERY_LIBRARIES}
+  kworkspace
+  QtLocation
+)
+
+set(recommendationsclient_LIB_HEADERS
+    recommendation/recommendation.h
+    recommendation/recommendationaction.h
+    recommendation/recommendationsclient.h
+    recommendation/recommendationsclient_export.h)
+
+install(FILES ${recommendationsclient_LIB_HEADERS} DESTINATION ${INCLUDE_INSTALL_DIR}/ COMPONENT Devel)
+
+install(TARGETS recommendationsclient EXPORT kdelibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 add_subdirectory(plasma)
 
