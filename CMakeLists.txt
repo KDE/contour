@@ -104,13 +104,15 @@ set_source_files_properties(${recommendationmanager_xml} PROPERTIES
 
 QT4_ADD_DBUS_INTERFACE(recommendationsclient_SRC ${recommendationmanager_xml} contour_interface)
 
-kde4_add_library(recommendationsclient
-  ${recommendationsclient_SRC}
+kde4_add_library(recommendationsclient SHARED ${recommendationsclient_SRC}
 )
+
+set_target_properties(recommendationsclient PROPERTIES VERSION ${KDE_NON_GENERIC_LIB_VERSION} SOVERSION ${KDE_NON_GENERIC_LIB_SOVERSION})
 
 target_link_libraries(
   recommendationsclient
   ${QT_QTCORE_LIBRARY}
+  ${QT_QTGUI_LIBRARY}
   ${KDE4_KDECORE_LIBS}
   ${SOPRANO_LIBRARIES}
   ${NEPOMUK_LIBRARIES}
