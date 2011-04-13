@@ -66,7 +66,7 @@ set(recommendationmanager_xml recommendation/org.kde.contour.RecommendationManag
 
 qt4_add_dbus_adaptor(
   recommendationmanager_SRC
-  "recommendation/org.kde.contour.RecommendationManager.xml"
+  ${recommendationmanager_xml}
   "recommendationmanager.h"
   "Contour::RecommendationManager"
   "recommendationmanageradaptor")
