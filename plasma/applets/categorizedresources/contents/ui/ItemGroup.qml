@@ -113,6 +113,7 @@ PlasmaCore.FrameSvgItem {
         onPositionChanged: {
             //TODO: height as well if it's going to become a grid view
             itemGroup.width = Math.max(LayoutManager.cellSize.width, itemGroup.width + mouse.x-startX)
+            itemGroup.height = Math.min(LayoutManager.cellSize.height*2, Math.max(LayoutManager.cellSize.height, itemGroup.height + mouse.y-startY))
         }
         onReleased: {
             animationsEnabled = true

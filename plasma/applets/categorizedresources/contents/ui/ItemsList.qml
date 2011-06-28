@@ -37,15 +37,18 @@ Item {
         bottomMargin: parent.margins.bottom
     }
 
-    ListView {
+    GridView {
         id: itemsList
+        cacheBuffer: 200
         currentIndex: main.currentGroup==itemGroup?main.currentIndex:-1
         pressDelay: 200
         anchors.fill: parent
-        snapMode: ListView.SnapToItem
+        snapMode: GridView.SnapToRow
         clip: true
-        spacing: 32;
-        orientation: Qt.Horizontal
+        //spacing: 32;
+        cellWidth: 182
+        cellHeight: 120
+        flow: GridView.TopToBottom
 
         model: MobileComponents.CategorizedProxyModel {
             sourceModel: metadataModel
@@ -61,8 +64,8 @@ Item {
 
         delegate: MobileComponents.ResourceDelegate {
             id: resourceDelegate
-            width: 140
-            height: itemsList.height
+            width: itemsList.cellWidth-20
+            height: itemsList.cellHeight-10
             resourceType: model.resourceType
             infoLabelVisible: false
 
