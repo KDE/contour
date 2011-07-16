@@ -41,5 +41,6 @@ install(FILES
 
 add_subdirectory(contourd)
 add_subdirectory(plasma)
+add_subdirectory(qtmobilityfeeder)
 
 macro_display_feature_log()
