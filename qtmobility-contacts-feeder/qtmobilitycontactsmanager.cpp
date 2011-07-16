@@ -17,14 +17,14 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "qtmobilitymanager.h"
+#include "qtmobilitycontactsmanager.h"
 
 #include <QString>
 #include <QtContacts/QContactManager>
 
 #include <KDebug>
 
-#include "qtmobilityfeeder.h"
+#include "qtmobilitycontactsfeeder.h"
 
 using namespace QtMobility;
 

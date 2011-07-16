@@ -15,12 +15,14 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "qtmobilityfeeder.h"
+#include "qtmobilitycontactsfeederplugin.h"
 
 #include <QDBusConnection>
 #include <KDebug>
 #include <KWindowSystem>
 #include <KUrl>
+
+#include "qtmobilitycontactsmanager.h"
 
 QtMobilityFeederPlugin::QtMobilityFeederPlugin(QObject * parent, const QVariantList & args)
     : Plugin(parent)
@@ -28,10 +30,11 @@ QtMobilityFeederPlugin::QtMobilityFeederPlugin(QObject * parent, const QVariantL
     Q_UNUSED(args)
     kDebug() << "We are in the QtMobilityFeederPlugin";
 
+    (void)new Contour::QtMobilityManager(this);
 }
 
 QtMobilityFeederPlugin::~QtMobilityFeederPlugin()
 {
 }
 
-KAMD_EXPORT_PLUGIN(QtMobilityFeederPlugin, "activitymanger_plugin_qtmobilityfeeder")
+KAMD_EXPORT_PLUGIN(QtMobilityFeederPlugin, "activitymanger_plugin_qtmobilitycontactsfeeder")
