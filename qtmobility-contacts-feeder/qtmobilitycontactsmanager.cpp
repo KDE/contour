@@ -37,6 +37,9 @@ QtMobilityManager::QtMobilityManager(QObject * parent)
 
     foreach (const QString & managerName, QContactManager::availableManagers()) {
         if (managerName == "invalid") continue;
+#ifndef QTCONTACTS_PLUGIN_DEBUG
+        if (managerName == "memory") continue;
+#endif
 
         (new QtMobilityFeeder(managerName))->start();
     }
