@@ -45,7 +45,7 @@
 
 #include <KDebug>
 
-#include "dummycontacts.h"
+#include "DummyContacts.h"
 
 using namespace QtMobility;
 using namespace Nepomuk::Vocabulary;

@@ -17,12 +17,26 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-
 #ifndef QTCONTACTSSCORER_H_
+#define QTCONTACTSSCORER_H_
 
+#include <QThread>
 
-// class QtContactsScorer
+class QtContactsScorerPrivate;
 
+/**
+ *
+ */
+class QtContactsScorer: public QThread {
+    Q_OBJECT
+
+public:
+    QtContactsScorer();
+    virtual ~QtContactsScorer();
+
+private:
+    class QtContactsScorerPrivate * const d;
+};
 
 #endif // QTCONTACTSSCORER_H_
 

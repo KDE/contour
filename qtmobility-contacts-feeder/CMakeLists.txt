@@ -3,6 +3,8 @@ project(activitymanager-plugin-qtmobilitycontactsfeeder)
 # This should be REQUIRED once we get rid of the hack below
 find_package(QtMobility)
 
+message("Qt Mobility is here: ${QTMOBILITY_INCLUDE_DIR}")
+
 include_directories(
    ${CMAKE_SOURCE_DIR}
    ${CMAKE_BINARY_DIR}
@@ -15,12 +17,15 @@ include_directories(
    ${INCLUDE_INSTALL_DIR}/QtMobility/QtMobility
 #this uses the cmake macro
    ${QTMOBILITY_INCLUDE_DIR}
+   ${QTMOBILITY_INCLUDE_DIR}/../QtContacts
+   ${QTMOBILITY_INCLUDE_DIR}/../QtMessaging
    )
 
 set(
-   QtContactsFeeder_SRCS
+   qtmobilitycontactsfeeder_SRCS
    QtContactsFeederPlugin.cpp
    QtContactsFeeder.cpp
+   QtContactsScorer.cpp
    QtContactsManager.cpp
    foreign/Plugin.cpp
    foreign/SharedInfo.cpp
@@ -60,8 +65,8 @@ target_link_libraries(
    ${SOPRANO_LIBRARIES}
    ${NEPOMUK_LIBRARIES}
    ${NEPOMUK_QUERY_LIBRARIES}
-   QtLocation
    QtContacts
+   QtMessaging
    )
 
 install(TARGETS activitymanager_plugin_qtmobilitycontactsfeeder DESTINATION ${PLUGIN_INSTALL_DIR})

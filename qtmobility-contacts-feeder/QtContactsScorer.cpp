@@ -20,6 +20,30 @@
 
 #include "QtContactsScorer.h"
 
+#include <QtMessaging/QMessageManager>
+
+using namespace QtMobility;
+
+/**
+ *
+ */
+class QtContactsScorerPrivate {
+public:
+    QMessageManager * manager;
+
+};
+
+QtContactsScorer::QtContactsScorer()
+    : d(new QtContactsScorerPrivate())
+{
+    d->manager = new QMessageManager();
+}
+
+QtContactsScorer::~QtContactsScorer()
+{
+    delete d->manager;
+    delete d;
+}
 
 // class QtContactsScorer
 
