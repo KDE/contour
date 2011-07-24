@@ -17,21 +17,45 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef QT_MOBILITY_MANAGER_H_
-#define QT_MOBILITY_MANAGER_H_
+#ifndef QT_MOBILITY_FEEDER_H_
+#define QT_MOBILITY_FEEDER_H_
 
-#include <QObject>
+#include <QThread>
+
+#include <QtContacts/QContact>
+
+using namespace QtMobility;
 
 namespace Contour {
 
-class QtMobilityManager: public QObject {
+class QtContactsFeederPrivate;
+
+/**
+ *
+ */
+class QtContactsFeeder: public QThread {
+    Q_OBJECT
+
 public:
-    QtMobilityManager(QObject *);
-    virtual ~QtMobilityManager();
+    QtContactsFeeder(const QString & managerName);
+    virtual ~QtContactsFeeder();
+
+    void run();
+
+private Q_SLOTS:
+    void contactsAdded(const QList < QContactLocalId > & contactIds);
+    void contactsChanged(const QList < QContactLocalId > & contactIds);
+    void contactsRemoved(const QList < QContactLocalId > & contactIds);
+    void dataChanged();
 
 private:
+    void updateContact(const QContact & contact);
+    void removeContact(const QContact & contact);
+
+    class QtContactsFeederPrivate * const d;
 };
 
 } // namespace Contour
 
-#endif // QT_MOBILITY_MANAGER_H_
+#endif // QT_MOBILITY_FEEDER_H_
+

@@ -18,11 +18,10 @@ include_directories(
    )
 
 set(
-   qtmobilitycontactsfeeder_SRCS
-   qtmobilitycontactsfeederplugin.cpp
-   qtmobilitycontactsfeeder.cpp
-   qtmobilitycontactsfeederplugin.cpp
-   qtmobilitycontactsmanager.cpp
+   QtContactsFeeder_SRCS
+   QtContactsFeederPlugin.cpp
+   QtContactsFeeder.cpp
+   QtContactsManager.cpp
    foreign/Plugin.cpp
    foreign/SharedInfo.cpp
    )

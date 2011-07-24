@@ -17,37 +17,21 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "qtmobilitycontactsmanager.h"
+#ifndef QT_MOBILITY_MANAGER_H_
+#define QT_MOBILITY_MANAGER_H_
 
-#include <QString>
-#include <QtContacts/QContactManager>
-
-#include <KDebug>
-
-#include "qtmobilitycontactsfeeder.h"
-
-using namespace QtMobility;
+#include <QObject>
 
 namespace Contour {
 
-QtMobilityManager::QtMobilityManager(QObject * parent)
-    : QObject(parent)
-{
-    kDebug() << "availableManagers" << QContactManager::availableManagers();
+class QtContactsManager: public QObject {
+public:
+    QtContactsManager(QObject *);
+    virtual ~QtContactsManager();
 
-    foreach (const QString & managerName, QContactManager::availableManagers()) {
-        if (managerName == "invalid") continue;
-#ifndef QTCONTACTS_PLUGIN_DEBUG
-        if (managerName == "memory") continue;
-#endif
+private:
+};
 
-        (new QtMobilityFeeder(managerName))->start();
-    }
-}
+} // namespace Contour
 
-QtMobilityManager::~QtMobilityManager()
-{
-}
-
-} // namespace Conto
-
+#endif // QT_MOBILITY_MANAGER_H_

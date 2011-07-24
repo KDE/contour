@@ -17,7 +17,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "qtmobilitycontactsfeeder.h"
+#include "QtContactsFeeder.h"
 
 #include <QtContacts/QContactManager>
 #include <QtContacts/QContact>
@@ -52,7 +52,7 @@ using namespace Nepomuk::Vocabulary;
 
 namespace Contour {
 
-class QtMobilityFeederPrivate {
+class QtContactsFeederPrivate {
 public:
 
     static QContactId uriToId(const QString & uri)
@@ -78,13 +78,13 @@ public:
     QString managerName;
 };
 
-QtMobilityFeeder::QtMobilityFeeder(const QString & managerName)
-    : d(new QtMobilityFeederPrivate())
+QtContactsFeeder::QtContactsFeeder(const QString & managerName)
+    : d(new QtContactsFeederPrivate())
 {
     d->managerName = managerName;
 }
 
-void QtMobilityFeeder::run()
+void QtContactsFeeder::run()
 {
     d->manager = new QContactManager(d->managerName);
 
@@ -111,13 +111,13 @@ void QtMobilityFeeder::run()
     kDebug() << "List ended";
 }
 
-QtMobilityFeeder::~QtMobilityFeeder()
+QtContactsFeeder::~QtContactsFeeder()
 {
     delete d->manager;
     delete d;
 }
 
-void QtMobilityFeeder::updateContact(const QContact & contact)
+void QtContactsFeeder::updateContact(const QContact & contact)
 {
     // To list all QtMobility contacts in Nepomuk, do:
     // select ?contact, ?url where {
@@ -263,25 +263,25 @@ void QtMobilityFeeder::updateContact(const QContact & contact)
     }
 }
 
-void QtMobilityFeeder::contactsAdded(const QList < QContactLocalId > & contactIds)
+void QtContactsFeeder::contactsAdded(const QList < QContactLocalId > & contactIds)
 {
     foreach (const QContactLocalId & id, contactIds) {
         updateContact(d->manager->contact(id));
     }
 }
 
-void QtMobilityFeeder::contactsChanged(const QList < QContactLocalId > & contactIds)
+void QtContactsFeeder::contactsChanged(const QList < QContactLocalId > & contactIds)
 {
     foreach (const QContactLocalId & id, contactIds) {
         updateContact(d->manager->contact(id));
     }
 }
 
-void QtMobilityFeeder::contactsRemoved(const QList < QContactLocalId > & contactIds)
+void QtContactsFeeder::contactsRemoved(const QList < QContactLocalId > & contactIds)
 {
 }
 
-void QtMobilityFeeder::dataChanged()
+void QtContactsFeeder::dataChanged()
 {
 }
 

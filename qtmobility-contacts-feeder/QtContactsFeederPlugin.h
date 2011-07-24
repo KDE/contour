@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2011 Ivan Cukic ivan.cukic(at)kde.org
+ *   Copyright (C) 2011 Ivan Cukic <ivan.cukic@kde.org>
  *
  *   This program is free software; you can redistribute it and/or
  *   modify it under the terms of the GNU General Public License as
@@ -15,26 +15,23 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "qtmobilitycontactsfeederplugin.h"
+#ifndef SLC_H
+#define SLC_H
 
-#include <QDBusConnection>
-#include <KDebug>
-#include <KWindowSystem>
-#include <KUrl>
+#include <QObject>
 
-#include "qtmobilitycontactsmanager.h"
+#include "Plugin.h"
 
-QtMobilityFeederPlugin::QtMobilityFeederPlugin(QObject * parent, const QVariantList & args)
-    : Plugin(parent)
+class QtContactsFeederPlugin: public Plugin
 {
-    Q_UNUSED(args)
-    kDebug() << "We are in the QtMobilityFeederPlugin";
+    Q_OBJECT
 
-    (void)new Contour::QtMobilityManager(this);
-}
+public:
+    QtContactsFeederPlugin(QObject *parent = 0, const QVariantList & args = QVariantList());
+    ~QtContactsFeederPlugin();
 
-QtMobilityFeederPlugin::~QtMobilityFeederPlugin()
-{
-}
+private:
 
-KAMD_EXPORT_PLUGIN(QtMobilityFeederPlugin, "activitymanger_plugin_qtmobilitycontactsfeeder")
+};
+
+#endif

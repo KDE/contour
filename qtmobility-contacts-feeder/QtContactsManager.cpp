@@ -17,45 +17,37 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef QT_MOBILITY_FEEDER_H_
-#define QT_MOBILITY_FEEDER_H_
+#include "QtContactsManager.h"
 
-#include <QThread>
+#include <QString>
+#include <QtContacts/QContactManager>
 
-#include <QtContacts/QContact>
+#include <KDebug>
+
+#include "QtContactsFeeder.h"
 
 using namespace QtMobility;
 
 namespace Contour {
 
-class QtMobilityFeederPrivate;
+QtContactsManager::QtContactsManager(QObject * parent)
+    : QObject(parent)
+{
+    kDebug() << "availableManagers" << QContactManager::availableManagers();
 
-/**
- *
- */
-class QtMobilityFeeder: public QThread {
-    Q_OBJECT
+    foreach (const QString & managerName, QContactManager::availableManagers()) {
+        if (managerName == "invalid") continue;
+#ifndef QTCONTACTS_PLUGIN_DEBUG
+        if (managerName == "memory") continue;
+#endif
 
-public:
-    QtMobilityFeeder(const QString & managerName);
-    virtual ~QtMobilityFeeder();
+        (new QtContactsFeeder(managerName))->start();
+    }
+}
 
-    void run();
+QtContactsManager::~QtContactsManager()
+{
+}
 
-private Q_SLOTS:
-    void contactsAdded(const QList < QContactLocalId > & contactIds);
-    void contactsChanged(const QList < QContactLocalId > & contactIds);
-    void contactsRemoved(const QList < QContactLocalId > & contactIds);
-    void dataChanged();
-
-private:
-    void updateContact(const QContact & contact);
-    void removeContact(const QContact & contact);
-
-    class QtMobilityFeederPrivate * const d;
-};
-
-} // namespace Contour
-
-#endif // QT_MOBILITY_FEEDER_H_
+} // namespace Conto
 
