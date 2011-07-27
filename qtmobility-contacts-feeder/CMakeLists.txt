@@ -5,6 +5,9 @@ find_package(QtMobility)
 
 message("Qt Mobility is here: ${QTMOBILITY_INCLUDE_DIR}")
 
+configure_file(config-qtc.h.cmake
+   ${CMAKE_CURRENT_BINARY_DIR}/config-qtc.h )
+
 include_directories(
    ${CMAKE_SOURCE_DIR}
    ${CMAKE_BINARY_DIR}

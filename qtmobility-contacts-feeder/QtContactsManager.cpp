@@ -25,6 +25,9 @@
 #include <KDebug>
 
 #include "QtContactsFeeder.h"
+#include "QtContactsScorer.h"
+
+#include "config-qtc.h"
 
 using namespace QtMobility;
 
@@ -39,10 +42,14 @@ QtContactsManager::QtContactsManager(QObject * parent)
         if (managerName == "invalid") continue;
 #ifndef QTCONTACTS_PLUGIN_DEBUG
         if (managerName == "memory") continue;
+#else
+        #warning "Enabling dummy contacts, this will fill up your nepomuk database with new contacts on every start"
 #endif
 
         (new QtContactsFeeder(managerName))->start();
     }
+
+    (new QtContactsScorer())->start();
 }
 
 QtContactsManager::~QtContactsManager()

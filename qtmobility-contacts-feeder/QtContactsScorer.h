@@ -34,6 +34,8 @@ public:
     QtContactsScorer();
     virtual ~QtContactsScorer();
 
+    void run();
+
 private:
     class QtContactsScorerPrivate * const d;
 };

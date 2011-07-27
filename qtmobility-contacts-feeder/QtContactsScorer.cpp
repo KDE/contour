@@ -21,6 +21,9 @@
 #include "QtContactsScorer.h"
 
 #include <QtMessaging/QMessageManager>
+#include <QtMessaging/QMessageAccount>
+
+#include <KDebug>
 
 using namespace QtMobility;
 
@@ -37,12 +40,25 @@ QtContactsScorer::QtContactsScorer()
     : d(new QtContactsScorerPrivate())
 {
     d->manager = new QMessageManager();
+
+    kDebug() << "We have the following accounts:";
+
+    foreach (const QMessageAccountId id, d->manager->queryAccounts()) {
+        kDebug() << "Message account" << id.toString();
+    }
+
+    kDebug() << "[acc list end]";
 }
 
 QtContactsScorer::~QtContactsScorer()
 {
     delete d->manager;
     delete d;
+}
+
+void QtContactsScorer::run()
+{
+
 }
 
 // class QtContactsScorer

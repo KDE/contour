@@ -82,10 +82,7 @@ QtContactsFeeder::QtContactsFeeder(const QString & managerName)
     : d(new QtContactsFeederPrivate())
 {
     d->managerName = managerName;
-}
 
-void QtContactsFeeder::run()
-{
     d->manager = new QContactManager(d->managerName);
 
     if (d->managerName == "memory") {
@@ -100,6 +97,10 @@ void QtContactsFeeder::run()
             this,     SLOT(contactsRemoved(QList < QContactLocalId >)));
     connect(d->manager, SIGNAL(dataChanged()),
             this,     SLOT(dataChanged()));
+}
+
+void QtContactsFeeder::run()
+{
 
     foreach (const QContact & contact, d->manager->contacts()) {
         // TODO: Support contact groups later?
