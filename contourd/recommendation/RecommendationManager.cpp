@@ -18,7 +18,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "recommendationmanager.h"
+#include "RecommendationManager.h"
 
 namespace Contour {
 
@@ -43,4 +43,4 @@ RecommendationManager::~RecommendationManager()
 
 } // namespace Contour
 
-#include "recommendationmanager.moc"
+#include "RecommendationManager.moc"
