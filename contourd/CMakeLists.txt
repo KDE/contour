@@ -21,7 +21,8 @@ include_directories(
 )
 
 set(recommendationmanager_SRC
-  recommendation/recommendationmanager.cpp
+  recommendation/RecommendationManager.cpp
+  recommendation/RecommendationEngine.cpp
   location/locationmanager.cpp
   main.cpp
 )

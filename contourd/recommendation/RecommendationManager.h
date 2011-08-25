@@ -24,6 +24,8 @@
 #include <QObject>
 #include <QtCore/QList>
 
+#include "RecommendationItem.h"
+
 namespace Contour {
 
 class RecommendationManager : public QObject
@@ -34,6 +36,9 @@ class RecommendationManager : public QObject
 public:
     RecommendationManager(QObject* parent = 0);
     ~RecommendationManager();
+
+private Q_SLOTS:
+    void updateRecommendations(const QList<RecommendationItem> & recommendations);
 
 private:
     class Private;

@@ -34,4 +34,8 @@ RecommendationEngine::~RecommendationEngine()
     delete d;
 }
 
+void RecommendationEngine::init()
+{
+}
+
 } // namespace Contour

@@ -43,7 +43,11 @@ public:
     RecommendationEngine(QObject * parent);
     virtual ~RecommendationEngine();
 
+    virtual void init();
+
 Q_SIGNALS:
+    // note that you need to pass sorted items to
+    // this method
     void recommendationsUpdated(const QList<RecommendationItem> & recommendations);
 
 private:

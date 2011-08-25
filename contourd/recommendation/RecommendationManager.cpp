@@ -20,25 +20,124 @@
 
 #include "RecommendationManager.h"
 
+#include <QList>
+
+#include <KDebug>
+#include <KServiceTypeTrader>
+#include <KConfig>
+#include <KConfigGroup>
+
+#include "RecommendationEngine.h"
+
 namespace Contour {
 
 class RecommendationManager::Private {
 public:
+    Private(RecommendationManager * parent)
+        : q(parent)
+    {
+        config = new KConfig("contourrc");
+        enginesConfig = new KConfigGroup(config, "RecommendationEngines");
+    }
+
+    ~Private()
+    {
+        delete enginesConfig;
+        delete config;
+    }
+
     RecommendationManager * q;
+
+    struct EngineInfo {
+        QString name;
+        qreal score;
+    };
+
+    QHash < RecommendationEngine *, EngineInfo > engines;
+    QList < RecommendationItem > recommendations;
+
+    KConfig * config;
+    KConfigGroup * enginesConfig;
 };
 
 
 RecommendationManager::RecommendationManager(QObject *parent)
     : QObject(parent),
-      d(new Private())
+      d(new Private(this))
 {
-    d->q = this;
+    kDebug() << "Loading engines...";
 
+    KService::List offers = KServiceTypeTrader::self()->query("Contour/RecommendationEngine");
+
+    foreach (const KService::Ptr & service, offers) {
+
+        kDebug() << "Loading engine:"
+            << service->name() << service->storageId() << service->library();
+
+        KPluginFactory * factory = KPluginLoader(service->library()).factory();
+
+        if (!factory) {
+            kDebug() << "Failed to load engine:" << service->name();
+            continue;
+        }
+
+        RecommendationEngine * engine = factory->create < RecommendationEngine > (this);
+
+        if (engine) {
+            engine->init();
+            d->engines[engine].name = service->name();
+            d->engines[engine].score = d->enginesConfig->readEntry(service->name(), 1.0);
+
+            connect(engine, SIGNAL(recommendationsUpdated(QList<RecommendationItem>)),
+                    this,   SLOT(updateRecommendations(QList<RecommendationItem>)),
+                    Qt::QueuedConnection);
+
+        } else {
+            kDebug() << "Failed to load engine:" << service->name();
+        }
+
+    }
 }
 
 RecommendationManager::~RecommendationManager()
 {
     delete d;
+}
+
+void RecommendationManager::updateRecommendations(const QList < RecommendationItem > & newRecommendations)
+{
+    RecommendationEngine * engine = dynamic_cast < RecommendationEngine * > (sender());
+
+    if (!engine || !d->engines.contains(engine)) return;
+
+    const Private::EngineInfo & engineInfo = d->engines[engine];
+
+    kDebug() << engineInfo.name << "updated its recommendations";
+
+    QMutableListIterator < RecommendationItem > i (d->recommendations);
+    while (i.hasNext()) {
+        const RecommendationItem & val = i.next();
+        if (val.engine == engineInfo.name) {
+            i.remove();
+        }
+    }
+
+    int location = 0;
+
+    // A simple merge sort
+    foreach (RecommendationItem item, newRecommendations) {
+        item.score *= engineInfo.score;
+        item.engine = engineInfo.name;
+
+        if (location >= d->recommendations.count()
+                || item.score > d->recommendations[location].score) {
+            d->recommendations.insert(location, item);
+        } else {
+            location++;
+        }
+    }
+
+
 }
 
 } // namespace Contour

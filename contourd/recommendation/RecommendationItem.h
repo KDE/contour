@@ -24,12 +24,13 @@ namespace Contour {
 
 class RecommendationItem {
 public:
-    virtual qreal score() const = 0;
-    virtual QString title() const = 0;
-    virtual QString description() const = 0;
-    virtual QString icon() const = 0;
+    qreal score;
+    QString title;
+    QString description;
+    QString icon;
 
-    virtual ~RecommendationItem() = 0;
+    QString engine;
+    QString id;
 
 };
 
