@@ -36,10 +36,12 @@ public:
     RecommendationScriptEngine(QObject * parent, const QString & script);
     virtual ~RecommendationScriptEngine();
 
+    virtual void init();
+
 Q_SIGNALS:
     // note that you need to pass sorted items to
     // this method
-    void recommendationsUpdated(const QList<RecommendationItem> & recommendations);
+    void recommendationsUpdated(const QList<Contour::RecommendationItem> & recommendations);
 
 public Q_SLOTS:
     QScriptValue getSensor(const QString & sensor);

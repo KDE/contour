@@ -87,13 +87,14 @@ RecommendationManager::RecommendationManager(QObject *parent)
         RecommendationEngine * engine = factory->create < RecommendationEngine > (this);
 
         if (engine) {
-            engine->init();
             d->engines[engine].name = service->name();
             d->engines[engine].score = d->enginesConfig->readEntry(service->name(), 1.0);
 
-            connect(engine, SIGNAL(recommendationsUpdated(QList<RecommendationItem>)),
-                    this,   SLOT(updateRecommendations(QList<RecommendationItem>)),
+            connect(engine, SIGNAL(recommendationsUpdated(QList<Contour::RecommendationItem>)),
+                    this,   SLOT(updateRecommendations(QList<Contour::RecommendationItem>)),
                     Qt::QueuedConnection);
+
+            engine->init();
 
         } else {
             kDebug() << "Failed to load engine:" << service->name();
@@ -115,14 +116,14 @@ RecommendationManager::RecommendationManager(QObject *parent)
 
         RecommendationEngine * engine = new RecommendationScriptEngine(this, service->library());
 
-        engine->init();
         d->engines[engine].name = service->name();
         d->engines[engine].score = d->enginesConfig->readEntry(service->name(), 1.0);
 
-        connect(engine, SIGNAL(recommendationsUpdated(QList<RecommendationItem>)),
-                this,   SLOT(updateRecommendations(QList<RecommendationItem>)),
+        connect(engine, SIGNAL(recommendationsUpdated(QList<Contour::RecommendationItem>)),
+                this,   SLOT(updateRecommendations(QList<Contour::RecommendationItem>)),
                 Qt::QueuedConnection);
 
+        engine->init();
     }
 }
 
@@ -133,14 +134,24 @@ RecommendationManager::~RecommendationManager()
 
 void RecommendationManager::updateRecommendations(const QList < RecommendationItem > & newRecommendations)
 {
+    kDebug() << "enter the glade...";
+
     RecommendationEngine * engine = dynamic_cast < RecommendationEngine * > (sender());
 
     if (!engine || !d->engines.contains(engine)) return;
 
     const Private::EngineInfo & engineInfo = d->engines[engine];
 
-    kDebug() << engineInfo.name << "updated its recommendations";
+    kDebug() << engineInfo.name << "### updated its recommendations";
 
+    // Printing the new list of recomms for the engine
+    int ind;
+    ind = 0;
+    foreach (const RecommendationItem & recommendation, newRecommendations) {
+        kDebug() << (++ind) << recommendation.title << recommendation.score;
+    }
+
+    // Removing recommendations from the current engine
     QMutableListIterator < RecommendationItem > i (d->recommendations);
     while (i.hasNext()) {
         const RecommendationItem & val = i.next();
@@ -155,16 +166,30 @@ void RecommendationManager::updateRecommendations(const QList < RecommendationIt
     foreach (RecommendationItem item, newRecommendations) {
         item.score *= engineInfo.score;
         item.engine = engineInfo.name;
+            kDebug() << "We want to add" << item.title << item.score << "somewhere";
 
-        if (location >= d->recommendations.count()
-                || item.score > d->recommendations[location].score) {
-            d->recommendations.insert(location, item);
-        } else {
+        while (location < d->recommendations.count()
+                && item.score < d->recommendations[location].score)
+        {
             location++;
         }
+
+        kDebug() << "adding" << item.title << "at" << location;
+        d->recommendations.insert(location, item);
     }
 
+    // while (d->recommendations.size() > 15) {
+    //     d->recommendations.removeLast();
+    // }
 
+    // Printing the new list of recomms
+    kDebug() << "### These are the current recommendations";
+    ind = 0;
+    foreach (const RecommendationItem & recommendation, d->recommendations) {
+        kDebug() << (++ind) << recommendation.title << recommendation.score;
+    }
+
+    emit recommendationsChanged(d->recommendations);
 }
 
 } // namespace Contour

@@ -48,7 +48,7 @@ public:
 Q_SIGNALS:
     // note that you need to pass sorted items to
     // this method
-    void recommendationsUpdated(const QList<RecommendationItem> & recommendations);
+    void recommendationsUpdated(const QList<Contour::RecommendationItem> & recommendations);
 
 private:
     class Private;

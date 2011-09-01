@@ -17,25 +17,20 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef RECOMMENDATION_ITEM_H_
-#define RECOMMENDATION_ITEM_H_
+#include "RecommendationItem.h"
 
-#include <QString>
+#include <QMetaType>
 
-namespace Contour {
-
-class RecommendationItem {
+class RecommendationItemStaticInitializer {
 public:
-    qreal score;
-    QString title;
-    QString description;
-    QString icon;
+    RecommendationItemStaticInitializer()
+    {
+        qRegisterMetaType < Contour::RecommendationItem > ("Contour::RecommendationItem");
+        qRegisterMetaType < QList < Contour::RecommendationItem > > ("QList<Contour::RecommendationItem>");
+    }
 
-    QString engine;
-    QString id;
+    static RecommendationItemStaticInitializer _instance;
 
 };
 
-} // namespace Contour
-
-#endif // RECOMMENDATION_ITEM_H_
+RecommendationItemStaticInitializer RecommendationItemStaticInitializer::_instance;

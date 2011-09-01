@@ -25,6 +25,7 @@ add_subdirectory(plugins)
 set(recommendationmanager_SRC
   recommendation/RecommendationManager.cpp
   recommendation/RecommendationEngine.cpp
+  recommendation/RecommendationItem.cpp
   recommendation/RecommendationScriptEngine.cpp
   location/locationmanager.cpp
   main.cpp

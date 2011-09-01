@@ -48,6 +48,7 @@ public:
     QScriptEngine * engine;
 
     QList<RecommendationItem> recommendations;
+    QString script;
 
 };
 
@@ -57,9 +58,14 @@ RecommendationScriptEngine::RecommendationScriptEngine(QObject * parent, const Q
     kDebug() << "RecommendationScriptEngine()" << script;
     kDebug() << "Available sensors" << QtMobility::QSensor::sensorTypes();
 
-    QFile file(KStandardDirs::locate("data", "contour/scripts/" + script + "/main.js"));
+    d->script = script;
+}
+
+void RecommendationScriptEngine::init()
+{
+    QFile file(KStandardDirs::locate("data", "contour/scripts/" + d->script + "/main.js"));
     if (!file.open(QIODevice::ReadOnly)) {
-        kDebug() << "Failed to open main.js for" << script;
+        kDebug() << "Failed to open main.js for" << d->script;
         return;
     }
 
@@ -67,13 +73,10 @@ RecommendationScriptEngine::RecommendationScriptEngine(QObject * parent, const Q
     connect(d->engine, SIGNAL(signalHandlerException(QScriptValue)),
             this, SLOT(signalHandlerException(QScriptValue)));
 
-    d->engine->globalObject().setProperty("engine",
+    d->engine->globalObject().setProperty("self",
             d->engine->newQObject(this));
 
-    signalHandlerException(
-    d->engine->evaluate(QTextStream(&file).readAll())
-    )
-    ;
+    d->engine->evaluate(QTextStream(&file).readAll());
 
 }
 
@@ -101,6 +104,8 @@ void RecommendationScriptEngine::addRecommendation(
         const QString & icon
     )
 {
+    kDebug() << d->script << score << id << title;
+
     int i = 0;
 
     while (d->recommendations.size() > i &&
@@ -110,15 +115,15 @@ void RecommendationScriptEngine::addRecommendation(
 
     RecommendationItem ri;
 
-    ri.score = score;
-    ri.id = id;
-    ri.title = title;
+    ri.score       = score;
+    ri.id          = id;
+    ri.title       = title;
     ri.description = description;
-    ri.icon = icon;
+    ri.icon        = icon;
 
     d->recommendations.insert(i, ri);
 
-    recommendationsUpdated(d->recommendations);
+    emit recommendationsUpdated(d->recommendations);
 }
 
 void RecommendationScriptEngine::removeRecommendation(const QString & id)
@@ -132,7 +137,7 @@ void RecommendationScriptEngine::removeRecommendation(const QString & id)
         }
     }
 
-    recommendationsUpdated(d->recommendations);
+    emit recommendationsUpdated(d->recommendations);
 }
 
 

@@ -38,7 +38,10 @@ public:
     ~RecommendationManager();
 
 private Q_SLOTS:
-    void updateRecommendations(const QList<RecommendationItem> & recommendations);
+    void updateRecommendations(const QList<Contour::RecommendationItem> & recommendations);
+
+Q_SIGNALS:
+    void recommendationsChanged(const QList<Contour::RecommendationItem> & recommendations);
 
 private:
     class Private;
