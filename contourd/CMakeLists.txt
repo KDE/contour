@@ -20,9 +20,12 @@ include_directories(
   ${QTMOBILITY_INCLUDE_DIR}
 )
 
+add_subdirectory(plugins)
+
 set(recommendationmanager_SRC
   recommendation/RecommendationManager.cpp
   recommendation/RecommendationEngine.cpp
+  recommendation/RecommendationScriptEngine.cpp
   location/locationmanager.cpp
   main.cpp
 )
@@ -57,6 +60,7 @@ kde4_add_executable(contour
 target_link_libraries(
   contour
   ${QT_QTCORE_LIBRARY}
+  ${QT_QTSCRIPT_LIBRARY}
   ${KDE4_KDECORE_LIBS}
   ${KDE4_KIO_LIBS}
   ${SOPRANO_LIBRARIES}
@@ -65,5 +69,21 @@ target_link_libraries(
   kworkspace
   QtLocation
   QtContacts
+  QtSensors
 )
+
+install(FILES
+    contour-recommendationengine.desktop
+    DESTINATION ${SERVICETYPES_INSTALL_DIR}
+    )
+
+install(FILES
+    contour-recommendationengine-qtscript.desktop
+    DESTINATION ${SERVICETYPES_INSTALL_DIR}
+    )
+
+install(
+    TARGETS contour ${INSTALL_TARGETS_DEFAULT_ARGS}
+    )
+
 

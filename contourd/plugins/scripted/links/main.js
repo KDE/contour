@@ -1,0 +1,1 @@
+engine.getSensor('QAmbientLightSensor').identifier;

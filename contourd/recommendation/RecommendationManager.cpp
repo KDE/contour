@@ -28,6 +28,7 @@
 #include <KConfigGroup>
 
 #include "RecommendationEngine.h"
+#include "RecommendationScriptEngine.h"
 
 namespace Contour {
 
@@ -69,6 +70,8 @@ RecommendationManager::RecommendationManager(QObject *parent)
 
     KService::List offers = KServiceTypeTrader::self()->query("Contour/RecommendationEngine");
 
+    // Loading C++ plugins
+
     foreach (const KService::Ptr & service, offers) {
 
         kDebug() << "Loading engine:"
@@ -95,6 +98,30 @@ RecommendationManager::RecommendationManager(QObject *parent)
         } else {
             kDebug() << "Failed to load engine:" << service->name();
         }
+
+    }
+
+    // Loading scripted plugins
+    kDebug() << "Loading scripted plugins";
+
+    // new RecommendationScriptEngine(this, QString());
+
+    offers = KServiceTypeTrader::self()->query("Contour/RecommendationEngine/QtScript");
+
+    foreach (const KService::Ptr & service, offers) {
+
+        kDebug() << "Loading scripted engine:"
+            << service->name() << service->library();
+
+        RecommendationEngine * engine = new RecommendationScriptEngine(this, service->library());
+
+        engine->init();
+        d->engines[engine].name = service->name();
+        d->engines[engine].score = d->enginesConfig->readEntry(service->name(), 1.0);
+
+        connect(engine, SIGNAL(recommendationsUpdated(QList<RecommendationItem>)),
+                this,   SLOT(updateRecommendations(QList<RecommendationItem>)),
+                Qt::QueuedConnection);
 
     }
 }
