@@ -24,6 +24,7 @@
 #include <QScriptValue>
 #include <QTextStream>
 #include <QFile>
+#include <QTimer>
 
 #include <QtSensors/QSensor>
 
@@ -49,6 +50,7 @@ public:
 
     QList<RecommendationItem> recommendations;
     QString script;
+    QTimer delay;
 
 };
 
@@ -59,6 +61,13 @@ RecommendationScriptEngine::RecommendationScriptEngine(QObject * parent, const Q
     kDebug() << "Available sensors" << QtMobility::QSensor::sensorTypes();
 
     d->script = script;
+
+    d->delay.setInterval(300);
+    d->delay.setSingleShot(true);
+
+    connect(&(d->delay), SIGNAL(timeout()),
+            this, SLOT(sendUpdateNotification()));
+
 }
 
 void RecommendationScriptEngine::init()
@@ -76,7 +85,11 @@ void RecommendationScriptEngine::init()
     d->engine->globalObject().setProperty("self",
             d->engine->newQObject(this));
 
-    d->engine->evaluate(QTextStream(&file).readAll());
+    const QScriptValue & result = d->engine->evaluate(QTextStream(&file).readAll());
+    if (d->engine->hasUncaughtException()) {
+        int line = d->engine->uncaughtExceptionLineNumber();
+        kDebug() << "uncaught exception at line" << line << ":" << result.toString();
+    }
 
 }
 
@@ -88,7 +101,19 @@ RecommendationScriptEngine::~RecommendationScriptEngine()
 QScriptValue RecommendationScriptEngine::getSensor(const QString & sensor)
 {
     kDebug() << "sensor" << sensor;
-    return d->engine->newQObject(new QtMobility::QSensor(sensor.toAscii(), this));
+    return d->engine->newQObject(new QtMobility::QSensor(sensor.toAscii()), QScriptEngine::AutoOwnership);
+}
+
+QScriptValue RecommendationScriptEngine::getTimer(int msec)
+{
+    kDebug() << "timer" << msec;
+
+    QTimer * timer = new QTimer();
+    timer->setSingleShot(false);
+    timer->setInterval(msec);
+    timer->start();
+
+    return d->engine->newQObject(timer, QScriptEngine::AutoOwnership);
 }
 
 void RecommendationScriptEngine::signalHandlerException(const QScriptValue & exception)
@@ -104,7 +129,7 @@ void RecommendationScriptEngine::addRecommendation(
         const QString & icon
     )
 {
-    kDebug() << d->script << score << id << title;
+    // kDebug() << d->script << score << id << title;
 
     int i = 0;
 
@@ -123,7 +148,7 @@ void RecommendationScriptEngine::addRecommendation(
 
     d->recommendations.insert(i, ri);
 
-    emit recommendationsUpdated(d->recommendations);
+    delayedUpdateNotification();
 }
 
 void RecommendationScriptEngine::removeRecommendation(const QString & id)
@@ -136,6 +161,26 @@ void RecommendationScriptEngine::removeRecommendation(const QString & id)
             i.remove();
         }
     }
+
+    delayedUpdateNotification();
+}
+
+void RecommendationScriptEngine::removeRecommendations()
+{
+    d->recommendations.clear();
+
+    delayedUpdateNotification();
+}
+
+void RecommendationScriptEngine::delayedUpdateNotification()
+{
+    d->delay.start();
+}
+
+void RecommendationScriptEngine::sendUpdateNotification()
+{
+    // just in case, although it is a single-shot
+    d->delay.stop();
 
     emit recommendationsUpdated(d->recommendations);
 }

@@ -45,6 +45,7 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     QScriptValue getSensor(const QString & sensor);
+    QScriptValue getTimer(int msec);
 
     void addRecommendation(
             qreal score,
@@ -55,10 +56,13 @@ public Q_SLOTS:
         );
 
     void removeRecommendation(const QString & id);
+    void removeRecommendations();
 
 
 private Q_SLOTS:
     void signalHandlerException(const QScriptValue & exception);
+    void delayedUpdateNotification();
+    void sendUpdateNotification();
 
 private:
     class Private;
