@@ -3,12 +3,6 @@
 <node>
     <interface name="org.kde.contour.RecommendationManager">
 
-        <!--
-    <property name="recommendations" type="a(ssdsss)" access="read" />
-      <annotation name="com.trolltech.QtDBus.QtTypeName" value="QList&lt;Contour::RecommendationItem&gt;" />
-    </property>
-      -->
-
         <method name="recommendations">
             <arg type="a(ssdsss)" direction="out" />
             <annotation name="com.trolltech.QtDBus.QtTypeName.Out0" value="QList&lt;Contour::RecommendationItem&gt;" />
@@ -23,5 +17,6 @@
             <arg name="recommendations" type="a(ssdsss)" />
             <annotation name="com.trolltech.QtDBus.QtTypeName.In0" value="QList&lt;Contour::RecommendationItem&gt;" />
         </signal>
+
     </interface>
 </node>
