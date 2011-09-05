@@ -72,6 +72,11 @@ RecommendationScriptEngine::RecommendationScriptEngine(QObject * parent, const Q
 
 }
 
+RecommendationScriptEngine::~RecommendationScriptEngine()
+{
+    delete d;
+}
+
 void RecommendationScriptEngine::init()
 {
     QFile file(KStandardDirs::locate("data", "contour/scripts/" + d->script + "/main.js"));
@@ -95,9 +100,9 @@ void RecommendationScriptEngine::init()
 
 }
 
-RecommendationScriptEngine::~RecommendationScriptEngine()
+void RecommendationScriptEngine::activate(const QString & id)
 {
-    delete d;
+    emit activationRequested(id);
 }
 
 QScriptValue RecommendationScriptEngine::getSensor(const QString & sensor)

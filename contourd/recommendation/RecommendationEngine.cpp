@@ -38,4 +38,8 @@ void RecommendationEngine::init()
 {
 }
 
+void RecommendationEngine::activate(const QString & id)
+{
+}
+
 } // namespace Contour

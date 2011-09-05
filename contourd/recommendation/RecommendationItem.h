@@ -20,12 +20,17 @@
 #ifndef RECOMMENDATION_ITEM_H_
 #define RECOMMENDATION_ITEM_H_
 
+#include <QObject>
 #include <QString>
+#include <QtDBus/QDBusArgument>
 
 namespace Contour {
 
-class RecommendationItem {
+class RecommendationItem: public QObject {
 public:
+    RecommendationItem();
+    RecommendationItem(const RecommendationItem & source);
+
     qreal score;
     QString title;
     QString description;
@@ -37,5 +42,11 @@ public:
 };
 
 } // namespace Contour
+
+Q_DECLARE_METATYPE(Contour::RecommendationItem)
+Q_DECLARE_METATYPE(QList<Contour::RecommendationItem>)
+
+QDBusArgument & operator << (QDBusArgument & arg, const Contour::RecommendationItem);
+const QDBusArgument & operator >> (const QDBusArgument & arg, Contour::RecommendationItem & rec);
 
 #endif // RECOMMENDATION_ITEM_H_

@@ -22,6 +22,9 @@
 
 #include <QList>
 
+#include <QtDBus/QDBusConnection>
+#include <QtDBus/QDBusMetaType>
+
 #include <KDebug>
 #include <KServiceTypeTrader>
 #include <KConfig>
@@ -29,6 +32,8 @@
 
 #include "RecommendationEngine.h"
 #include "RecommendationScriptEngine.h"
+
+#include "recommendationmanageradaptor.h"
 
 namespace Contour {
 
@@ -125,6 +130,14 @@ RecommendationManager::RecommendationManager(QObject *parent)
 
         engine->init();
     }
+
+    // Showing ourselves via the d-bus
+    qDBusRegisterMetaType < Contour::RecommendationItem > ();
+    qDBusRegisterMetaType < QList < Contour::RecommendationItem > > ();
+    (void) new RecommendationManagerAdaptor(this);
+    QDBusConnection::sessionBus().registerObject(
+            QLatin1String("/recommendationmanager"), this);
+
 }
 
 RecommendationManager::~RecommendationManager()
@@ -190,6 +203,11 @@ void RecommendationManager::updateRecommendations(const QList < RecommendationIt
     }
 
     emit recommendationsChanged(d->recommendations);
+}
+
+void RecommendationManager::executeAction(const QString & engine, const QString & id)
+{
+
 }
 
 } // namespace Contour

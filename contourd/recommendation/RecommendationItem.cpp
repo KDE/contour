@@ -21,6 +21,8 @@
 
 #include <QMetaType>
 
+namespace Contour {
+
 class RecommendationItemStaticInitializer {
 public:
     RecommendationItemStaticInitializer()
@@ -34,3 +36,54 @@ public:
 };
 
 RecommendationItemStaticInitializer RecommendationItemStaticInitializer::_instance;
+
+RecommendationItem::RecommendationItem()
+{
+}
+
+RecommendationItem::RecommendationItem(const RecommendationItem & source)
+    : QObject()
+{
+    score       = source.score;
+    title       = source.title;
+    description = source.description;
+    icon        = source.icon;
+    engine      = source.engine;
+    id          = source.id;
+}
+
+} // namespace Contour
+
+QDBusArgument & operator << (QDBusArgument & arg, const Contour::RecommendationItem r)
+{
+    arg.beginStructure();
+
+    arg << r.engine;
+    arg << r.id;
+
+    arg << r.score;
+    arg << r.title;
+    arg << r.description;
+    arg << r.icon;
+
+    arg.endStructure();
+
+    return arg;
+}
+
+const QDBusArgument & operator >> (const QDBusArgument & arg, Contour::RecommendationItem & r)
+{
+    arg.beginStructure();
+
+    arg >> r.engine;
+    arg >> r.id;
+
+    arg >> r.score;
+    arg >> r.title;
+    arg >> r.description;
+    arg >> r.icon;
+
+    arg.endStructure();
+
+    return arg;
+}

@@ -43,6 +43,9 @@ private Q_SLOTS:
 Q_SIGNALS:
     void recommendationsChanged(const QList<Contour::RecommendationItem> & recommendations);
 
+public Q_SLOTS:
+    void executeAction(const QString & engine, const QString & id);
+
 private:
     class Private;
     Private* const d;

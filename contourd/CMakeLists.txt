@@ -34,6 +34,11 @@ set(recommendationmanager_SRC
   main.cpp
 )
 
+qt4_add_dbus_adaptor(
+  recommendationmanager_SRC recommendation/org.kde.contour.RecommendationManager.xml
+  recommendation/RecommendationManager.h Contour::RecommendationManager
+)
+
 find_file(kext_onto_src kext.trig PATH_SUFFIXES "ontology/kde" PATHS ${CMAKE_INSTALL_PREFIX}/share ENV XDG_DATA_DIRS)
 
 soprano_add_ontology(recommendationmanager_SRC
