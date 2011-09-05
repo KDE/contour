@@ -38,7 +38,7 @@ void RecommendationEngine::init()
 {
 }
 
-void RecommendationEngine::activate(const QString & id)
+void RecommendationEngine::activate(const QString & id, const QString & action)
 {
 }
 

@@ -100,9 +100,9 @@ void RecommendationScriptEngine::init()
 
 }
 
-void RecommendationScriptEngine::activate(const QString & id)
+void RecommendationScriptEngine::activate(const QString & id, const QString & action)
 {
-    emit activationRequested(id);
+    emit activationRequested(id, action);
 }
 
 QScriptValue RecommendationScriptEngine::getSensor(const QString & sensor)

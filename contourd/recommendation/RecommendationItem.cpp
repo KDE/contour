@@ -52,6 +52,20 @@ RecommendationItem::RecommendationItem(const RecommendationItem & source)
     id          = source.id;
 }
 
+RecommendationItem & RecommendationItem::operator = (const RecommendationItem & source)
+{
+    if (&source == this) {
+        score       = source.score;
+        title       = source.title;
+        description = source.description;
+        icon        = source.icon;
+        engine      = source.engine;
+        id          = source.id;
+    }
+
+    return *this;
+}
+
 } // namespace Contour
 
 QDBusArgument & operator << (QDBusArgument & arg, const Contour::RecommendationItem r)

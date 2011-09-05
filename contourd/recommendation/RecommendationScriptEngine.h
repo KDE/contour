@@ -37,14 +37,14 @@ public:
     virtual ~RecommendationScriptEngine();
 
     virtual void init();
-    virtual void activate(const QString & id);
+    virtual void activate(const QString & id, const QString & action = QString());
 
 Q_SIGNALS:
     // note that you need to pass sorted items to
     // this method (sorted by the score)
     void recommendationsUpdated(const QList<Contour::RecommendationItem> & recommendations);
 
-    void activationRequested(const QString & id);
+    void activationRequested(const QString & id, const QString & action);
 
 public Q_SLOTS:
     QScriptValue getSensor(const QString & sensor);

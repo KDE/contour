@@ -44,7 +44,7 @@ public:
     virtual ~RecommendationEngine();
 
     virtual void init();
-    virtual void activate(const QString & id);
+    virtual void activate(const QString & id, const QString & action = QString());
 
 Q_SIGNALS:
     // note that you need to pass sorted items to

@@ -40,10 +40,11 @@ private Q_SLOTS:
     void updateRecommendations(const QList <Contour::RecommendationItem> & recommendations);
 
 Q_SIGNALS:
-    void recommendationsChanged(const QList <Contour::RecommendationItem> & recommendations);
+    // void recommendationsChanged(const QList <Contour::RecommendationItem> & recommendations);
+    void recommendationsChanged();
 
 public:
-    Q_INVOKABLE void executeAction(const QString & engine, const QString & id);
+    Q_INVOKABLE void executeAction(const QString & engine, const QString & id, const QString & action = QString());
     Q_INVOKABLE QList <Contour::RecommendationItem> recommendations() const;
 
 private:

@@ -205,12 +205,13 @@ void RecommendationManager::updateRecommendations(const QList < RecommendationIt
         kDebug() << (++ind) << recommendation.engine << recommendation.title << recommendation.score;
     }
 
-    emit recommendationsChanged(d->recommendations);
+    // emit recommendationsChanged(d->recommendations);
+    emit recommendationsChanged();
 }
 
-void RecommendationManager::executeAction(const QString & engine, const QString & id)
+void RecommendationManager::executeAction(const QString & engine, const QString & id, const QString & action)
 {
-    kDebug() << engine << id;
+    kDebug() << engine << id << action;
 
     if (!d->engineByName.contains(engine)) return;
 

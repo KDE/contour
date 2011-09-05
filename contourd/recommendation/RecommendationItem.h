@@ -30,6 +30,7 @@ class RecommendationItem: public QObject {
 public:
     RecommendationItem();
     RecommendationItem(const RecommendationItem & source);
+    RecommendationItem & operator = (const RecommendationItem & source);
 
     qreal score;
     QString title;
