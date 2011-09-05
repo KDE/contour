@@ -20,13 +20,16 @@ include_directories(
   ${QTMOBILITY_INCLUDE_DIR}
 )
 
-add_subdirectory(plugins)
+add_subdirectory(recommendation/plugins)
 
 set(recommendationmanager_SRC
   recommendation/RecommendationManager.cpp
   recommendation/RecommendationEngine.cpp
   recommendation/RecommendationItem.cpp
   recommendation/RecommendationScriptEngine.cpp
+
+  recommendation/sensors/dbus/DBusSensor.cpp
+
   location/locationmanager.cpp
   main.cpp
 )

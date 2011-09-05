@@ -31,6 +31,8 @@
 #include <KDebug>
 #include <KStandardDirs>
 
+#include "sensors/dbus/DBusSensor.h"
+
 namespace Contour {
 
 /**
@@ -101,7 +103,17 @@ RecommendationScriptEngine::~RecommendationScriptEngine()
 QScriptValue RecommendationScriptEngine::getSensor(const QString & sensor)
 {
     kDebug() << "sensor" << sensor;
-    return d->engine->newQObject(new QtMobility::QSensor(sensor.toAscii()), QScriptEngine::AutoOwnership);
+
+    QObject * result = NULL;
+
+    if (sensor == "DBus") {
+        kDebug() << "Returning the D-Bus sensor. This is not in QtMobility";
+        result = new DBusSensor();
+    } else {
+        result = new QtMobility::QSensor(sensor.toAscii());
+    }
+
+    return d->engine->newQObject(result, QScriptEngine::AutoOwnership);
 }
 
 QScriptValue RecommendationScriptEngine::getTimer(int msec)
