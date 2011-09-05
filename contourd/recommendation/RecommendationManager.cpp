@@ -59,7 +59,8 @@ public:
         qreal score;
     };
 
-    QHash < RecommendationEngine *, EngineInfo > engines;
+    QHash < RecommendationEngine *, EngineInfo > engineInfos;
+    QHash < QString, RecommendationEngine * > engineByName;
     QList < RecommendationItem > recommendations;
 
     KConfig * config;
@@ -92,8 +93,9 @@ RecommendationManager::RecommendationManager(QObject *parent)
         RecommendationEngine * engine = factory->create < RecommendationEngine > (this);
 
         if (engine) {
-            d->engines[engine].name = service->name();
-            d->engines[engine].score = d->enginesConfig->readEntry(service->name(), 1.0);
+            d->engineInfos[engine].name = service->library();
+            d->engineInfos[engine].score = d->enginesConfig->readEntry(service->name(), 1.0);
+            d->engineByName[service->library()] = engine;
 
             connect(engine, SIGNAL(recommendationsUpdated(QList<Contour::RecommendationItem>)),
                     this,   SLOT(updateRecommendations(QList<Contour::RecommendationItem>)),
@@ -121,8 +123,9 @@ RecommendationManager::RecommendationManager(QObject *parent)
 
         RecommendationEngine * engine = new RecommendationScriptEngine(this, service->library());
 
-        d->engines[engine].name = service->name();
-        d->engines[engine].score = d->enginesConfig->readEntry(service->name(), 1.0);
+        d->engineInfos[engine].name = service->library();
+        d->engineInfos[engine].score = d->enginesConfig->readEntry(service->name(), 1.0);
+        d->engineByName[service->library()] = engine;
 
         connect(engine, SIGNAL(recommendationsUpdated(QList<Contour::RecommendationItem>)),
                 this,   SLOT(updateRecommendations(QList<Contour::RecommendationItem>)),
@@ -151,9 +154,9 @@ void RecommendationManager::updateRecommendations(const QList < RecommendationIt
 
     RecommendationEngine * engine = dynamic_cast < RecommendationEngine * > (sender());
 
-    if (!engine || !d->engines.contains(engine)) return;
+    if (!engine || !d->engineInfos.contains(engine)) return;
 
-    const Private::EngineInfo & engineInfo = d->engines[engine];
+    const Private::EngineInfo & engineInfo = d->engineInfos[engine];
 
     kDebug() << engineInfo.name << "### updated its recommendations";
 
@@ -199,7 +202,7 @@ void RecommendationManager::updateRecommendations(const QList < RecommendationIt
     kDebug() << "### These are the current recommendations";
     ind = 0;
     foreach (const RecommendationItem & recommendation, d->recommendations) {
-        kDebug() << (++ind) << recommendation.title << recommendation.score;
+        kDebug() << (++ind) << recommendation.engine << recommendation.title << recommendation.score;
     }
 
     emit recommendationsChanged(d->recommendations);
@@ -207,7 +210,17 @@ void RecommendationManager::updateRecommendations(const QList < RecommendationIt
 
 void RecommendationManager::executeAction(const QString & engine, const QString & id)
 {
+    kDebug() << engine << id;
 
+    if (!d->engineByName.contains(engine)) return;
+
+    d->engineByName[engine]->activate(id);
+
+}
+
+QList < Contour::RecommendationItem > RecommendationManager::recommendations() const
+{
+    return d->recommendations;
 }
 
 } // namespace Contour

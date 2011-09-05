@@ -27,5 +27,5 @@ dbussensor.serviceUnregistered.connect(function fn(param) {
 dbussensor.watchFor("org.mpris.bangarang");
 
 self.activationRequested.connect(function fn(id) {
-    dbussensor.call(param, "/Player", "org.freedesktop.MediaPlayer", "Pause");
+    dbussensor.call("org.mpris.bangarang", "/Player", "org.freedesktop.MediaPlayer", "Pause");
 });

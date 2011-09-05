@@ -31,20 +31,20 @@ namespace Contour {
 class RecommendationManager : public QObject
 {
     Q_OBJECT
-    // Q_PROPERTY(QList<Contour::Recommendation> recommendations READ recommendations)
 
 public:
     RecommendationManager(QObject* parent = 0);
     ~RecommendationManager();
 
 private Q_SLOTS:
-    void updateRecommendations(const QList<Contour::RecommendationItem> & recommendations);
+    void updateRecommendations(const QList <Contour::RecommendationItem> & recommendations);
 
 Q_SIGNALS:
-    void recommendationsChanged(const QList<Contour::RecommendationItem> & recommendations);
+    void recommendationsChanged(const QList <Contour::RecommendationItem> & recommendations);
 
-public Q_SLOTS:
-    void executeAction(const QString & engine, const QString & id);
+public:
+    Q_INVOKABLE void executeAction(const QString & engine, const QString & id);
+    Q_INVOKABLE QList <Contour::RecommendationItem> recommendations() const;
 
 private:
     class Private;
