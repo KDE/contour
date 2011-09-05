@@ -72,13 +72,14 @@ void DBusSensor::watchFor(const QString & service)
 
         foreach (const QString & name, d->conniface->registeredServiceNames().value()) {
             if (name.startsWith(d->servicePrefix)) {
-                kDebug() << name << d->servicePrefix << name.startsWith(d->servicePrefix);
-                serviceRegistered(name);
+                emit serviceRegistered(name);
             }
         }
 
     } else {
         kDebug() << "Watching for exact" << service;
+
+        d->servicePrefix = QString();
 
         d->watcher = new QDBusServiceWatcher(
                 service,
@@ -92,6 +93,10 @@ void DBusSensor::watchFor(const QString & service)
                 this,       SIGNAL(serviceRegistered(QString)));
         connect(d->watcher, SIGNAL(serviceUnregistered(QString)),
                 this,       SIGNAL(serviceUnregistered(QString)));
+
+        if (d->conniface->isServiceRegistered(service)) {
+            emit serviceRegistered(service);
+        }
 
         // TODO: Check whether the service is already running
     }
