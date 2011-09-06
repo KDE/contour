@@ -279,6 +279,7 @@ void QtMobilityFeeder::contactsChanged(const QList < QContactLocalId > & contact
 
 void QtMobilityFeeder::contactsRemoved(const QList < QContactLocalId > & contactIds)
 {
+    Q_UNUSED(contactIds);
 }
 
 void QtMobilityFeeder::dataChanged()
