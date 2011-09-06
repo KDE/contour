@@ -47,9 +47,12 @@ Q_SIGNALS:
     void activationRequested(const QString & id, const QString & action);
 
 public Q_SLOTS:
+    // TODO: These could be removed to some plugins or whatever
     QScriptValue getSensor(const QString & sensor);
     QScriptValue getTimer(int msec);
+    void openUrl(const QString & url);
 
+public Q_SLOTS:
     void addRecommendation(
             qreal score,
             const QString & id,

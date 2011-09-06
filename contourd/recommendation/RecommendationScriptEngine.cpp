@@ -25,6 +25,8 @@
 #include <QTextStream>
 #include <QFile>
 #include <QTimer>
+#include <QDesktopServices>
+#include <QUrl>
 
 #include <QtSensors/QSensor>
 
@@ -131,6 +133,11 @@ QScriptValue RecommendationScriptEngine::getTimer(int msec)
     timer->start();
 
     return d->engine->newQObject(timer, QScriptEngine::AutoOwnership);
+}
+
+void RecommendationScriptEngine::openUrl(const QString & url)
+{
+    QDesktopServices::openUrl(QUrl(url));
 }
 
 void RecommendationScriptEngine::signalHandlerException(const QScriptValue & exception)

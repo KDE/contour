@@ -9,3 +9,6 @@ self.addRecommendation(1.0, "http://www.wikipedia.org", "Wikipedia", "The bigges
 //     index ++;
 // });
 
+self.activationRequested.connect(function fn(id, action) {
+    self.openUrl(id);
+});
