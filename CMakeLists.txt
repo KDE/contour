@@ -41,6 +41,6 @@ install(FILES
 
 add_subdirectory(contourd)
 add_subdirectory(plasma)
-add_subdirectory(qtmobility-contacts-feeder)
+# add_subdirectory(qtmobility-contacts-feeder)
 
 macro_display_feature_log()
