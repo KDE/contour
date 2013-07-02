@@ -95,15 +95,41 @@ soprano_add_ontology(recommendationmanager_SRC
 ########################################################################
 set(ADDITIONAL_LINK_LIBRARIES)
 
-set(recommendationmanager_SRC
-    ${recommendationmanager_SRC}
-    location/network-engines/solid/SolidNetworkNotifier.cpp
-    )
+if (${KDE_VERSION} VERSION_GREATER 4.10.50)
+    find_package(NetworkManager)
 
-set(ADDITIONAL_LINK_LIBRARIES
-    ${ADDITIONAL_LINK_LIBRARIES}
-    ${KDE4_SOLID_LIBS}
-    )
+    pkg_check_modules(NETWORKMANAGERQT REQUIRED NetworkManagerQt)
+    if (NOT NETWORKMANAGERQT_FOUND)
+        message(FATAL_ERROR "ERROR: NetworkManagerQt not found. http://projects.kde.org/search?q=networkmanager&scope=all&all_words=1&projects=1&submit=Submit")
+    endif (NOT NETWORKMANAGERQT_FOUND)
+
+    include_directories(
+        ${NETWORKMANAGER_INCLUDE_DIRS}
+        ${NETWORKMANAGERQT_INCLUDE_DIRS}
+        )
+
+    set(ADDITIONAL_LINK_LIBRARIES
+        ${ADDITIONAL_LINK_LIBRARIES}
+        NetworkManagerQt
+        )
+
+    set(recommendationmanager_SRC
+        ${recommendationmanager_SRC}
+        location/network-engines/networkmanager/NetworkManagerQtNotifier.cpp
+        )
+else()
+    set(ADDITIONAL_LINK_LIBRARIES
+        ${ADDITIONAL_LINK_LIBRARIES}
+        ${KDE4_SOLID_LIBS}
+        solidcontrol
+        solidcontrolifaces
+        )
+
+    set(recommendationmanager_SRC
+        ${recommendationmanager_SRC}
+        location/network-engines/solid/SolidNetworkNotifier.cpp
+        )
+endif()
 
 ########################################################################
 
@@ -122,8 +148,6 @@ target_link_libraries(
   ${NEPOMUK_QUERY_LIBRARIES}
   ${ADDITIONAL_LINK_LIBRARIES}
   kworkspace
-  solidcontrol
-  solidcontrolifaces
   # QtLocation
   # QtContacts
   # QtSensors
